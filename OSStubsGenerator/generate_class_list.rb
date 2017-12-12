@@ -12,7 +12,7 @@ def classes_to_json(classes, mod = nil)
   json_out
 end
 
-def main
+def main(dir_path)
   utility_class_names = %w(Workspace WorkspaceObject IdfObject)
   utility_classes = OpenStudio.constants.select {|c| utility_class_names.include? c.to_s}
 
@@ -23,9 +23,9 @@ def main
   classes_json['modules'].push(classes_to_json(utility_classes))
   classes_json['modules'].push(classes_to_json(model_classes, 'Model'))
 
-  File.new('//Mac/Home/Documents/Visual Studio 2013/Projects/OSStubsGenerator/OSStubsGenerator/resources/classes.json', 'w').puts(classes_json.to_json)
+  File.new("#{dir_path}\OSStubsGenerator\\resources\\classes.json", 'w').puts(classes_json.to_json)
 end
 
 if __FILE__ == $0
-  main
+  main(ARGV[0])
 end
