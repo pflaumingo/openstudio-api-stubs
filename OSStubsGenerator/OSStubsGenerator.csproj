@@ -113,10 +113,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="resources\classes.json" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="resources\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
       <Visible>False</Visible>
@@ -136,8 +135,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>ruby "$(SolutionDir)OSStubsGenerator\generate_class_list.rb" "$(SolutionDir)
-exit /b 1</PreBuildEvent>
+    <PreBuildEvent>ruby "$(SolutionDir)OSStubsGenerator\generate_class_list.rb" "$(SolutionDir)</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
