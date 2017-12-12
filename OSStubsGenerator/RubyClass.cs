@@ -23,7 +23,7 @@ namespace OSStubsGenerator
         private List<MethodInfo> _methods;
         private ConstructorInfo[] _constructors;
 
-        private string Depth = "\t";
+        private string Depth = "  ";
 
         public RubyClass(Type type, string moduleName)
         {
@@ -79,8 +79,8 @@ namespace OSStubsGenerator
             stringBuilder.Append("module OpenStudio\n");
             if (ModuleName != null)
             {
-                Depth += '\t';
-                stringBuilder.Append(String.Format("\tmodule {0}\n", ModuleName));
+                Depth += "  ";
+                stringBuilder.Append(String.Format("  module {0}\n", ModuleName));
             }
             
             stringBuilder.Append(Depth + "class " + this.ClassName);
@@ -97,7 +97,7 @@ namespace OSStubsGenerator
             }
 
             stringBuilder.Append(Depth + "end\n");
-            stringBuilder.Append("\tend\n");
+            stringBuilder.Append("  end\n");
             stringBuilder.Append("end");
 
             return stringBuilder.ToString();

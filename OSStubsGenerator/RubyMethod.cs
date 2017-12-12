@@ -12,7 +12,7 @@ namespace OSStubsGenerator
         public List<string> Parameters { get; set; }
         public bool Overloads { get; set; }
         public bool StaticMethod { get; set; }
-        private const string depth = "\t\t\t";
+        private const string depth = "\s\s\s\s\s\s";
 
         private RubyMethod(string name, bool overloads, bool staticMethod = false, List<String> parameters = null)
         {
