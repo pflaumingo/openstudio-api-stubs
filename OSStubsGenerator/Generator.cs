@@ -19,10 +19,11 @@ namespace OSStubsGenerator
             ModuleContainer = moduleContainer;
             Types = new List<Type>();
 
-            // There only seems to be one namespace for the C# bindings so I can just get the assmebly from any Type
+            // There only seems to be one namespace for the C# bindings so the assmebly can be grabbed from any Type
             Assembly assembly = typeof(Model).Assembly;
             RubyClasses = new List<RubyClass>();
 
+            // Generate and add classes for each module
             foreach (ModuleInfo moduleInfo in ModuleContainer.modules)
 	        {
 		        Types = GetTypesInNamespace(typeof(Model).Assembly, "OpenStudio", moduleInfo);
