@@ -31,11 +31,15 @@ namespace OSStubsGenerator
             ClassName = type.Name;
             _methodCount = new Dictionary<string, int>();
 
-            _methods = type.GetMethods().Where(m => m.DeclaringType == type && m.IsPublic).ToList();
+            _methods = type.GetMethods().Where(m => m.DeclaringType == type && m.IsPublic && !m.IsVirtual).ToList();
             Methods = new List<RubyMethod>();
             _constructors = type.GetConstructors();
 
-            Methods.Add(RubyMethod.CreateRubyConstructor(_constructors));
+            if (_constructors.Length > 0)
+            {
+                Methods.Add(RubyMethod.CreateRubyConstructor(_constructors));
+            }
+            
             CountMethods();
             CreateMethods();
 
@@ -76,6 +80,7 @@ namespace OSStubsGenerator
         public string write()
         {
             var stringBuilder = new StringBuilder();
+            stringBuilder.Append("require 'openstudio'\n");
             stringBuilder.Append("module OpenStudio\n");
             if (ModuleName != null)
             {
@@ -97,7 +102,11 @@ namespace OSStubsGenerator
             }
 
             stringBuilder.Append(Depth + "end\n");
-            stringBuilder.Append("  end\n");
+            if (ModuleName != null)
+            {
+                stringBuilder.Append("  end\n");
+            }
+            
             stringBuilder.Append("end");
 
             return stringBuilder.ToString();

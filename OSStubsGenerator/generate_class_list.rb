@@ -13,8 +13,8 @@ def classes_to_json(classes, mod = nil)
 end
 
 def main(dir_path)
-  utility_class_names = %w(Workspace WorkspaceObject IdfObject)
-  utility_classes = OpenStudio.constants.select {|c| utility_class_names.include? c.to_s}
+  # utility_class_names = %w(Workspace WorkspaceObject IdfObject OSOptionalQuantity)
+  utility_classes = OpenStudio.constants.select {|c| OpenStudio.const_get(c).is_a? Class}
 
   model_module = OpenStudio::Model
   model_classes = model_module.constants.select {|c| model_module.const_get(c).is_a? Class}

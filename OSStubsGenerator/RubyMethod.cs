@@ -12,14 +12,17 @@ namespace OSStubsGenerator
         public List<string> Parameters { get; set; }
         public bool Overloads { get; set; }
         public bool StaticMethod { get; set; }
-        private const string depth = "\s\s\s\s\s\s";
+        public string ReturnType { get; set; }
 
-        private RubyMethod(string name, bool overloads, bool staticMethod = false, List<String> parameters = null)
+        private const string depth = "      ";
+
+        private RubyMethod(string name, bool overloads, bool staticMethod = false, List<String> parameters = null, string returnType = null)
         {
             this.MethodName = name;
             this.Overloads = overloads;
             this.StaticMethod = staticMethod;
             this.Parameters = parameters ?? new List<String>();
+            this.ReturnType = returnType;
         }
 
         public static RubyMethod CreateRubyMethod(MethodInfo method)
@@ -29,12 +32,12 @@ namespace OSStubsGenerator
                 if (method.Name != "Dispose" && method.IsPublic && !method.IsVirtual)
                 {
                     var parameters = method.GetParameters().Select(p => char.ToLower(p.ParameterType.Name[0]).ToString() + p.ParameterType.Name.Substring(1)).ToList();
-                    //method.GetParameters().Where(p => p.)
+                    var returnType = method.ReturnType.Name;
 
                     if (method.IsStatic)
-                        return new RubyMethod(method.Name, false, true, parameters);
+                        return new RubyMethod(method.Name, false, true, parameters, returnType);
                     else
-                        return new RubyMethod(method.Name, false, false, parameters);
+                        return new RubyMethod(method.Name, false, false, parameters, returnType);
                 }
             }
             catch (Exception)
@@ -47,12 +50,14 @@ namespace OSStubsGenerator
 
         public static RubyMethod CreateOverloadedRubyMethod(MethodInfo method)
         {
+            var returnType = method.ReturnType.Name;
+
             try
             {
-                if (method.IsStatic && method.IsPublic && !method.IsVirtual)
-                    return new RubyMethod(method.Name, true, true);
+                if (method.IsStatic)
+                    return new RubyMethod(method.Name, true, true, null, returnType);
                 else
-                    return new RubyMethod(method.Name, true);
+                    return new RubyMethod(method.Name, true, false, null, returnType);
             }
             catch (Exception)
             {
@@ -64,18 +69,21 @@ namespace OSStubsGenerator
 
         public static RubyMethod CreateRubyConstructor(ConstructorInfo[] ctors)
         {
-            if (ctors.Length > 1 || ctors.Length == 0)
-                return new RubyMethod("initialize", true, false);
+            if (ctors.Length > 1)
+                return new RubyMethod("new", true, true);
             else
             {
                 var parameters = ctors[0].GetParameters().Select(p => char.ToLower(p.ParameterType.Name[0]).ToString() + p.ParameterType.Name.Substring(1)).ToList();
-                return new RubyMethod("initialize", false, false, parameters);
+                return new RubyMethod("new", false, true, parameters);
             }
         }
 
         public string write()
         {
-            var str = depth + "def ";
+            var str = "";
+            if (ReturnType != "Void" && ReturnType != null)
+                str += depth + "# @return [" + ReturnType + "]\n";
+            str += depth + "def ";
 
             if (StaticMethod)
                 str += "self.";
